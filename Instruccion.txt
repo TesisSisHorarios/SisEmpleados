@@ -1,0 +1,19 @@
+Pasos para ejecutar la solicion:
+
+Ejecutar Script:
+
+    Ejecutar el script base.sq(Creacion de la base de datos y tabla, las tablas tambien se pueden generar al compilar la solución)
+
+Instalar en angular lo siguiente:
+    npm install primeng --save
+    npm install primeicons --save
+    npm install @angular/cdk --save
+    npm install primeflex
+    npm install @angular/cdk --save
+    
+
+
+Compilar la solicion:
+
+    mvn clean install
+

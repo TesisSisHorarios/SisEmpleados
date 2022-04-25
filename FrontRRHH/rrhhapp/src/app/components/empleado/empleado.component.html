@@ -1,0 +1,247 @@
+<p-toast></p-toast>
+
+<div class="card">
+
+    <p-toolbar styleClass="p-mb-4">
+        <ng-template pTemplate="left">
+            <button pButton pRipple label="Empleado" icon="pi pi-plus" class="p-button-info" (click)="nuevoEmpleado()"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <p-table #dt1 [value]="empleados" selectionMode="single" [(selection)]="empleadoSeleccionado" dataKey="id" styleClass="p-datatable-customers"
+        [rows]="10" [paginator]="true" stateStorage="local" stateKey="statedemo-local">
+        
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="id.cpersona">Cod. <p-sortIcon field="id.cpersona"></p-sortIcon></th>
+                <th pSortableColumn="primernombre">Primer Nombre<p-sortIcon field="primernombre"></p-sortIcon></th>
+                <th pSortableColumn="otronombre">Otro Nombre<p-sortIcon field="otronombre"></p-sortIcon></th>
+                <th pSortableColumn="primerapellido">Primer Apellido<p-sortIcon field="primerapellido"></p-sortIcon></th>
+                <th pSortableColumn="segundoapellido">Segundo Apellido<p-sortIcon field="segundoapellido"></p-sortIcon></th>
+                <th pSortableColumn="tipoIdentificacion.descripcion">Tipo Identificacion<p-sortIcon field="tipoIdentificacion.descripcion"></p-sortIcon></th>
+                <th pSortableColumn="identificacion">Identificacion<p-sortIcon field="identificacion"></p-sortIcon></th>
+                <th pSortableColumn="pais.nombre">Pais<p-sortIcon field="pais.nombre"></p-sortIcon></th>
+                <th pSortableColumn="correo">Correo<p-sortIcon field="correo"></p-sortIcon></th>
+                <th></th>
+            </tr>
+            
+        </ng-template>
+
+        <ng-template pTemplate="body" let-empleado>
+            <tr [pSelectableRow]="empleado">
+                <td>
+                    {{empleado.id.cpersona}}
+                </td>
+                <td>
+                    {{empleado.primernombre}}
+                </td>
+                <td>
+                    {{empleado.otronombre}}
+                </td>
+                <td>
+                    {{empleado.primerapellido}}
+                </td>
+                <td>
+                    {{empleado.segundoapellido}}
+                </td>
+                <td>
+                    {{empleado.tipoIdentificacion.descripcion}}
+                </td>
+                <td>
+                    {{empleado.identificacion}}
+                </td>
+                <td>
+                    {{empleado.pais.nombre}}
+                </td>
+                <td>
+                    {{empleado.correo}}
+                </td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-info p-mr-2" (click)="editarEmpleado(empleado)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="eliminarEmpleado(empleado)" ></button>
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+</div>
+
+
+<p-dialog [(visible)]="empleadoDialogo" [style]="{width: '650px'}" header="Nuevo Empleado" [modal]="true" styleClass="p-fluid"> 
+    
+    <ng-template pTemplate="content">
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Primer Apellido</label>
+                <input type="text" pInputText 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" [(ngModel)]="empleado.primerapellido" required autofocus autocomplete="false" />
+                <small class="p-invalid" *ngIf="submit && !empleado.primerapellido">Primer Apellido es requerido.</small>
+
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Segundo Apellido</label>
+                <input type="text" 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" pInputText [(ngModel)]="empleado.segundoapellido" required autofocus />
+                
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Primer Nombre</label>
+                <input type="text" pInputText 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" [(ngModel)]="empleado.primernombre" required autofocus autocomplete="false" />
+                <small class="p-invalid" *ngIf="submit && !empleado.primernombre">Primer Nombre es requerido.</small>
+
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Otro Nombre</label>
+                <input type="text" 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="50" pInputText [(ngModel)]="empleado.otronombre" required autofocus />
+                
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">País</label>
+                <p-dropdown [options]="paises" [(ngModel)]="empleado.pais" placeholder="Selecciona un país" optionLabel="nombre" [showClear]="true"></p-dropdown>
+                <small class="p-invalid" *ngIf="submit && !empleado.pais">Primer Nombre es requerido.</small>
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Tipo Identificacion</label>
+                <p-dropdown [options]="tiposId" [(ngModel)]="empleado.tipoIdentificacion" placeholder="Selecciona un tipo" optionLabel="descripcion" [showClear]="true"></p-dropdown>
+                <small class="p-invalid" *ngIf="submit && !empleado.tipoIdentificacion">Tipo de Indentificacion es requerido.</small>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Identificación</label>
+                <input type="text"  
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 48 && event.charCode <= 57)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" pInputText [(ngModel)]="empleado.identificacion" required autofocus />
+                <small class="p-invalid" *ngIf="submit && !empleado.identificacion">Identificación es requerida.</small>
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Fecha de Ingreso</label>
+                <p-calendar inputId="basic" [(ngModel)]="empleado.fingreso"></p-calendar>
+                <small class="p-invalid" *ngIf="submit && !empleado.fingreso">Fecha de Ingreso es requerido.</small>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Área</label>
+                <p-dropdown [options]="areas" [(ngModel)]="empleado.area" placeholder="Selecciona una area" optionLabel="nombre" [showClear]="true"></p-dropdown>
+                <small class="p-invalid" *ngIf="submit && !empleado.area">Área es requerida.</small>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialogo()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarEmpleado()"></button>
+    </ng-template>
+</p-dialog>
+
+
+
+
+<p-dialog [(visible)]="empleadoDialogoEditar" [style]="{width: '650px'}" header="Editar Empleado" [modal]="true" styleClass="p-fluid"> 
+    
+    <ng-template pTemplate="content">
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Primer Apellido</label>
+                <input type="text" pInputText 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" [(ngModel)]="empleado.primerapellido" required autofocus autocomplete="false" />
+                <small class="p-invalid" *ngIf="submit && !empleado.primerapellido">Primer Apellido es requerido.</small>
+
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Segundo Apellido</label>
+                <input type="text" 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" pInputText [(ngModel)]="empleado.segundoapellido" required autofocus />
+                
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Primer Nombre</label>
+                <input type="text" pInputText 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" [(ngModel)]="empleado.primernombre" required autofocus autocomplete="false" />
+                <small class="p-invalid" *ngIf="submit && !empleado.primernombre">Primer Nombre es requerido.</small>
+
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Otro Nombre</label>
+                <input type="text" 
+                id="upper" 
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode == 32)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="50" pInputText [(ngModel)]="empleado.otronombre" required autofocus />
+                
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">País</label>
+                <p-dropdown [options]="paises" [(ngModel)]="empleado.pais" placeholder="Selecciona un país" optionLabel="nombre" [showClear]="true"></p-dropdown>
+                <small class="p-invalid" *ngIf="submit && !empleado.pais">Primer Nombre es requerido.</small>
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Tipo Identificacion</label>
+                <p-dropdown [options]="tiposId" [(ngModel)]="empleado.tipoIdentificacion" placeholder="Selecciona un tipo" optionLabel="descripcion" [showClear]="true"></p-dropdown>
+                <small class="p-invalid" *ngIf="submit && !empleado.tipoIdentificacion">Tipo de Indentificacion es requerido.</small>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Identificación</label>
+                <input type="text"  
+                onkeypress="if ((event.charCode >= 97 && event.charCode <= 122)||(event.charCode >= 48 && event.charCode <= 57)||(event.charCode >= 65 && event.charCode <= 90)) { return true;} return false;"
+                maxlength="20" pInputText [(ngModel)]="empleado.identificacion" required autofocus />
+                <small class="p-invalid" *ngIf="submit && !empleado.identificacion">Identificación es requerida.</small>
+            </div>
+        </div>
+
+        <div class="grid p-fluid">
+            <div class="col-12 md:col-6">
+                <label for="price">Fecha de Ingreso</label>
+                <input type="text" 
+                id="upper"  pInputText [(ngModel)]="empleado.fingreso" disabled />
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="price">Área</label>
+                <p-dropdown [options]="areas" [(ngModel)]="empleado.area" placeholder="Selecciona una area" optionLabel="nombre" [showClear]="true"></p-dropdown>
+                <small class="p-invalid" *ngIf="submit && !empleado.area">Área es requerida.</small>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialogo()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="guardarEditarEmpleado()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
